@@ -34,7 +34,7 @@ impl StaticConstParse {
     }
 
     fn to_rust_string(&self) -> String {
-        format!("let {}: [u32; 4] = [{}, {}, {}, {}]", self.name, self.arg0, self.arg1, self.arg2, self.arg3)
+        format!("let {}: [u32; 4] = [{}, {}, {}, {}]\n", self.name, self.arg0, self.arg1, self.arg2, self.arg3)
     }
 }
 
@@ -43,11 +43,18 @@ fn match_static_const_macros(text: &str) -> Vec<StaticConstParse>{
         static ref RE: Regex = Regex::new(r"static\s+const\s+(\w+)\s(\w+)\s=\s(\w+)\s*\((0x[a-fA-F0-9]+),\s*(0x[a-fA-F0-9]+),\s*(0x[a-fA-F0-9]+),\s*(0x[a-fA-F0-9]+)\);").unwrap(); 
     }
 
-    let parseVec = RE.captures_iter(text)
+    let parse_vec = RE.captures_iter(text)
         .map(|cap| StaticConstParse::from_capture(cap))
         .collect();
 
-    parseVec
+    parse_vec
+}
+
+fn to_rust_string(parse_vec: Vec<StaticConstParse>) -> String {
+    parse_vec.iter()
+        .map(|x| x.to_rust_string())
+        .collect()
+        .join()
 }
 
 #[cfg(test)]
@@ -100,7 +107,7 @@ static const Steinberg_TUID Steinberg_FUnknown_iid = SMTG_INLINE_UID (0x00000000
 
         let test_string = iid.to_rust_string();
 
-        assert_eq!(test_string, "let Steinberg_FUnknown_iid: [u32; 4] = [0x00000000, 0x00000000, 0xC0000000, 0x00000046]")
+        assert_eq!(test_string, "let Steinberg_FUnknown_iid: [u32; 4] = [0x00000000, 0x00000000, 0xC0000000, 0x00000046]\n")
     }
 
 
