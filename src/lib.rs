@@ -32,6 +32,10 @@ impl StaticConstParse {
             arg3: cap[7].to_string(),
         }
     }
+
+    fn to_rust_string(&self) -> String {
+        format!("let {}: [u32; 4] = [{}, {}, {}, {}]", self.name, self.arg0, self.arg1, self.arg2, self.arg3)
+    }
 }
 
 fn match_static_const_macros(text: &str) -> Vec<StaticConstParse>{
@@ -48,7 +52,7 @@ fn match_static_const_macros(text: &str) -> Vec<StaticConstParse>{
 
 #[cfg(test)]
 mod tests {
-    use crate::{match_static_const_macros};
+    use crate::{match_static_const_macros, StaticConstParse};
 
     #[test]
     fn it_works() {
@@ -58,7 +62,7 @@ mod tests {
 
 
     #[test]
-    fn it_captures_pattern(){
+    fn it_parses_to_struct(){
 
         let input = "
 typedef struct Steinberg_FUnknown
@@ -79,5 +83,25 @@ static const Steinberg_TUID Steinberg_FUnknown_iid = SMTG_INLINE_UID (0x00000000
         assert_eq!(match_0.arg2, "0xC0000000".to_string());
         assert_eq!(match_0.arg3, "0x00000046".to_string());
     }
+
+    
+    #[test]
+    fn it_converts_to_string(){
+
+        let iid = StaticConstParse {
+            data_type: "Steinberg_TUID".to_string(),
+            name: "Steinberg_FUnknown_iid".to_string(),
+            macro_fn_name: "SMTG_INLINE_UID".to_string(),
+            arg0: "0x00000000".to_string(),
+            arg1: "0x00000000".to_string(),
+            arg2: "0xC0000000".to_string(),
+            arg3: "0x00000046".to_string()
+        };
+
+        let test_string = iid.to_rust_string();
+
+        assert_eq!(test_string, "let Steinberg_FUnknown_iid: [u32; 4] = [0x00000000, 0x00000000, 0xC0000000, 0x00000046]")
+    }
+
 
 }
