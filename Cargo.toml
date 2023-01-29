@@ -3,5 +3,9 @@ name = "vst3-c-api-sys"
 version = "0.1.0"
 edition = "2021"
 
+[dependencies]
+regex = "1"
+lazy_static = "1.4.0"
+
 [build-dependencies]
 bindgen = "0.61.0"
