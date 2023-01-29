@@ -68,13 +68,16 @@ typedef struct Steinberg_FUnknown
 
 static const Steinberg_TUID Steinberg_FUnknown_iid = SMTG_INLINE_UID (0x00000000, 0x00000000, 0xC0000000, 0x00000046);";
 
-        assert_eq!(match_static_const_macros(input)[0].data_type, "Steinberg_TUID".to_string());
-        assert_eq!(match_static_const_macros(input)[0].name, "Steinberg_FUnknown_iid".to_string());
-        assert_eq!(match_static_const_macros(input)[0].macro_fn_name, "SMTG_INLINE_UID".to_string());
-        assert_eq!(match_static_const_macros(input)[0].arg0, "0x00000000".to_string());
-        assert_eq!(match_static_const_macros(input)[0].arg1, "0x00000000".to_string());
-        assert_eq!(match_static_const_macros(input)[0].arg2, "0xC0000000".to_string());
-        assert_eq!(match_static_const_macros(input)[0].arg3, "0x00000046".to_string());
+        let match_list = match_static_const_macros(input);
+        let match_0 = &match_list[0];
+
+        assert_eq!(match_0.data_type, "Steinberg_TUID".to_string());
+        assert_eq!(match_0.name, "Steinberg_FUnknown_iid".to_string());
+        assert_eq!(match_0.macro_fn_name, "SMTG_INLINE_UID".to_string());
+        assert_eq!(match_0.arg0, "0x00000000".to_string());
+        assert_eq!(match_0.arg1, "0x00000000".to_string());
+        assert_eq!(match_0.arg2, "0xC0000000".to_string());
+        assert_eq!(match_0.arg3, "0x00000046".to_string());
     }
 
 }
